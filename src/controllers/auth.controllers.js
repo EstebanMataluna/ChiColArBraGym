@@ -1,5 +1,5 @@
 import User from '../models/user.model.js';
-import { Jwt } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import {TOKEN_SECRET} from '../config.js';
 import {createAccessToken} from '../libs/jwt.js';
@@ -11,6 +11,10 @@ export const register = async (req, res) => {
     // console.log(username,email,password)
 
     try {
+        const userFound = await User.findOne({ email});
+        if (userFound)
+            // error va en un arreglo para que sea igual que zod
+            return res.status(400).json(["El mail está previamente registrado"]);
 
         const passwordHash = await bcrypt.hash(password,10);    
 
