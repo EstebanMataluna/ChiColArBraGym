@@ -3,6 +3,8 @@ import z from 'zod';
 export const registerSchema = z.object({
     username:z.string({
         required_error: 'Se requiere un nombre de usuario.'
+    }).min(4,{
+        required_error: 'El nombre de usuario debe tener 4 caracteres como mínimo.'    
     }),
     email:z.string({
         required_error: 'Se requiere un E-mail.'

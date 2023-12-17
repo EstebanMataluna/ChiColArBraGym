@@ -5,12 +5,12 @@ import {TOKEN_SECRET} from '../config.js';
 import {createAccessToken} from '../libs/jwt.js';
 
 
+
 export const register = async (req, res) => {
-    const {username, email, password} = req.body;
-
-    // console.log(username,email,password)
-
     try {
+        const {username, email, password} = req.body;
+        console.log(username,email,password)        
+        // registerSchema.parse({ username, email, password }); // Validar el esquema
         const userFound = await User.findOne({ email});
         if (userFound)
             // error va en un arreglo para que sea igual que zod
@@ -47,7 +47,7 @@ export const register = async (req, res) => {
         // res.send('Registrando');
         } catch (error) {
             // console.log(error);
-            res.status(500).json({message: error.message});
+             res.status(500).json({message: error.message});
         }
 };
 
@@ -77,8 +77,9 @@ export const login = async (req, res) => {
         });
         // res.send('Registrando');
         } catch (error) {
-            // console.log(error);
-            res.status(500).json({message: error.message});
+             console.log(error);
+             res.status(500).json({message: error.message});
+            
         }
 };
 
