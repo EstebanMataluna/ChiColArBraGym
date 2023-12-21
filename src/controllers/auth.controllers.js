@@ -83,12 +83,13 @@ export const login = async (req, res) => {
         }
 };
 
-export const logout = (req, res) => {
+export const logout = async (req, res) => {
+    console.log("llega petición de logout al servidor");
     res.cookie('token', "", {
-        httpOnly:true,
-        secure: true,
+
         exprires: new Date(0),
     });
+    console.log("Actualizo cookie")
     return res.status(200);
 };
 
@@ -99,10 +100,10 @@ export const verifyToken = async (req,res) => {
     if (!token) return res.send(false);
 
     jwt.verify(token, TOKEN_SECRET, async (error, user)=> {
-        if (error) return res.sendstatus(401);
-console.log(user.id);
+        if (error) return res.sendStatus(401);
+console.log("token correcto");
         const userFound = await  User.findById(user.id);
-        if (!userFound) return res.sendstatus(401);
+        if (!userFound) return res.sendStatus(401);
 
         return res.json ({
             id: userFound.id,

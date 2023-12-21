@@ -44,7 +44,8 @@ export default {
       try {
           const response = await axios.post('http://localhost:3000/api/login', this.form);
           console.log(response.status); // Imprimir la respuesta del servidor en la consola
-          this.showError = false
+          this.showError = false;
+          this.$store.dispatch('loginExitoso', response.data);
           this.$router.push("/posts");
           // Después de un inicio de sesión exitoso
           const userId = response.data.id;  

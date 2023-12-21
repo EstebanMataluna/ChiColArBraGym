@@ -10,6 +10,7 @@
           <p class="card-text">{{ disciplina.fecha.slice(0, 10) }}</p>
           <p class="card-text">{{ disciplina.hora }}</p>
           <button @click="inscribirse(disciplina)" class="btn btn-primary">Reservar</button>
+          <p class="card-text">{{ disciplina._id }}</p>
         </div>
       </div>
     </div>
@@ -41,9 +42,28 @@ export default {
     //verDetalle(disciplina) {
       // Lógica para mostrar los detalles de la disciplina
     //},
-      inscribirse(disciplina) {
-              console.log(disciplina)
+    async inscribirse(disciplina) {
+      try {
+        const usuarioLogueado = this.$store.getters.usuarioLogueado;
+        const tarea = {
+          clase: disciplina.disciplina,
+          descripcion: disciplina.descripciondiscpl,
+          profesor: disciplina.profesor,
+          dia: disciplina.fecha,
+          hs: disciplina.hora,
+          user: usuarioLogueado.id // Aquí agregamos el ID del usuario logueado
+        };
+
+        // Realizamos la solicitud POST a la API para crear la tarea
+        const response = await axios.post('http://localhost:3000/api/tasks', tarea);
+        
+        // Manejo de la respuesta si es necesario
+        
+        console.log('Tarea creada:', response.data);
+      } catch (error) {
+        console.error('Error al inscribirse:', error);
       }
+    },
   }
 };
 </script>
