@@ -64,8 +64,8 @@ export const login = async (req, res) => {
         const isMatch = await bcrypt.compare (password, userFound.password);
         if (!isMatch) return res.status(400).json({message: "Password Incorrecta"});  
 
-        const token = await createAccessToken({id:userFound._id});
-        res.cookie("token", token)
+        const token = await createAccessToken({id:userFound._id,username:userFound.username});
+        res.cookie("token", token);
 
 
         res.json({
@@ -84,21 +84,45 @@ export const login = async (req, res) => {
 };
 
 export const logout = (req, res) => {
-    res.cookie('token', "", {exprires: new Date(0)});
+    res.cookie('token', "", {
+        httpOnly:true,
+        secure: true,
+        exprires: new Date(0),
+    });
     return res.status(200);
 };
 
-export const profile = async (req, res) => {
+export const verifyToken = async (req,res) => {
+    console.log("entra en verifitoken",req.cookies);
+    const {token} = req.cookies; 
+    console.log(token); 
+    if (!token) return res.send(false);
+
+    jwt.verify(token, TOKEN_SECRET, async (error, user)=> {
+        if (error) return res.sendstatus(401);
+console.log(user.id);
+        const userFound = await  User.findById(user.id);
+        if (!userFound) return res.sendstatus(401);
+
+        return res.json ({
+            id: userFound.id,
+            username: userFound.username,
+            email: userFound.email,
+        });
+    });
+};
+
+//export const profile = async (req, res) => {
     //console.log(req.user);
-    const userFound = await User.findById(req.user.id);
+//    const userFound = await User.findById(req.user.id);
 
-    if (!userFound) return res.status(400).json({message: "Usuario no encontrado"});
-    return res.json({
-        id: userFound._id,
-        username: userFound.username,
-        email: userFound.email,
-        createdAt: userFound.createdAt,
-        updateAt: userFound.updateAt,
-    })
+//    if (!userFound) return res.status(400).json({message: "Usuario no encontrado"});
+//    return res.json({
+//        id: userFound._id,
+//        username: userFound.username,
+//        email: userFound.email,
+//        createdAt: userFound.createdAt,
+//        updateAt: userFound.updateAt,
+//    })
 
-}
+//}

@@ -1,73 +1,96 @@
 <template>
   <div class="container">
     <p>Aquí irán todas las clases en las que me he inscripto</p>
-<!---   <div v-if="User">
-      <p>Hi {{ User }}</p>
-    </div>
-    <div>
-      <form @submit.prevent="submit">
-        <div>
-          <label for="title">Title:</label>
-          <input type="text" name="title" v-model="form.title" />
-        </div>
-        <div>
-          <textarea
-            name="write_up"
-            v-model="form.write_up"
-            placeholder="Write up..."
-          ></textarea>
-        </div>
-        <button type="submit">Submit</button>
-      </form>
-    </div>
-    <div class="posts" v-if="Posts">
+      <p>Hi {{ $store.state.auth.user }}</p>
+      <div>
+      <h1>Clases Inscritas</h1>
       <ul>
-        <li v-for="post in Posts" :key="post.id">
-          <div id="post-div">
-            <p>{{ post.title }}</p>
-            <p>{{ post.write_up }}</p>
-            <p>Written By: {{ post.author.username }}</p>
+        <li v-for="clase in clases" :key="clase._id">
+          <div class="clase-item">
+            <p>{{ clase.clase }} - {{ clase.descripcion }} - Profesor: {{ clase.profesor }} - Día: {{ formatDate(clase.dia) }} - Hora: {{ clase.hs }}</p>
+            <button @click="eliminarClase(clase._id)">Eliminar</button>
           </div>
         </li>
       </ul>
     </div>
-    <div v-else>Oh no!!! We have no posts</div> -->
   </div>
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
-
+// import { mapActions } from "vuex";
+import axios from 'axios';
 export default {
-  name: "Posts",
-  components: {},
   data() {
     return {
-      form: {
-        title: "",
-        write_up: "",
-      },
+      clases: [],
     };
   },
-  created: function() {
-    // a function to call getposts action
-    this.GetPosts()
-  },
-  computed: {
-    ...mapGetters({ Posts: "StatePosts", User: "StateUser" }),
+  mounted() {
+    // Llamada a la API al montar el componente
+    this.fetchClases();
   },
   methods: {
-    ...mapActions(["CreatePost", "GetPosts"]),
-    async submit() {
+    async fetchClases() {
       try {
-        await this.CreatePost(this.form);
+        const response = await axios.get('http://localhost:3000/api/tasks'); // mi API
+        this.clases = response.data;
       } catch (error) {
-        throw "Sorry you can't make a post now!"
+        console.error('Error al obtener las clases:', error);
+      }
+    },
+    formatDate(dateString) {
+      const options = { year: 'numeric', month: 'long', day: 'numeric' };
+      return new Date(dateString).toLocaleDateString('es-AR', options);
+    },
+    async eliminarClase(id) {
+      try {
+        await this.$axios.delete(`http://localhost:3000/api/tasks/${id}`); //  API para borrar la clase
+        // Vuelve a cargar las clases después de eliminar
+        this.fetchClases();
+      } catch (error) {
+        console.error('Error al eliminar la clase:', error);
       }
     },
   },
 };
 </script>
+
+
+
+
+
+<!-- import { mapGetters, mapActions } from "vuex";
+
+//export default {
+//  name: "Posts",
+//  components: {},
+//  data() {
+//    return {
+//      form: {
+//        title: "",
+//        write_up: "",
+//      },
+//    };
+//  },
+//  created: function() {
+    // a function to call getposts action
+//    this.GetPosts()
+//  },
+//  computed: {
+//    ...mapGetters({ Posts: "StatePosts", User: "StateUser" }),
+//  },
+//  methods: {
+//    ...mapActions(["CreatePost", "GetPosts"]),
+//    async submit() {
+//      try {
+//        await this.CreatePost(this.form);
+//      } catch (error) {
+//        throw "Sorry you can't make a post now!"
+//      }
+//    },
+//  },
+//};   -->
+
 <style scoped>
 * {
   box-sizing: border-box;

@@ -41,9 +41,9 @@ export default {
     //verDetalle(disciplina) {
       // Lógica para mostrar los detalles de la disciplina
     //},
-    //inscribirse(disciplina) {
-      // Lógica para inscribirse en la disciplina
-    //}
+      inscribirse(disciplina) {
+              console.log(disciplina)
+      }
   }
 };
 </script>

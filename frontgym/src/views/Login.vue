@@ -46,6 +46,11 @@ export default {
           console.log(response.status); // Imprimir la respuesta del servidor en la consola
           this.showError = false
           this.$router.push("/posts");
+          // Después de un inicio de sesión exitoso
+          const userId = response.data.id;  
+const nombreDeUsuario = response.data.usename;
+          this.$store.commit('setUserData', { id: userId, name: nombreDeUsuario });
+          
         } catch (error) {
           this.showError = true;
           console.log(error.response.data);

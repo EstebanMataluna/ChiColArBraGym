@@ -3,6 +3,7 @@
     <router-link to="/">Home</router-link> |
     <router-link to="/posts">My next classes</router-link> |
     <span v-if="isLoggedIn">
+      Hola usuario: {{ $store.state.auth.user }}
       <a @click="logout">Logout</a>
     </span>
     <span v-else>
@@ -13,7 +14,6 @@
   </div>
 </template>
 <script>
-
 import axios from 'axios';
 
 export default {

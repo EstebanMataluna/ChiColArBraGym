@@ -1,8 +1,10 @@
 import axios from "axios";
 
 const state = {
-  user: null,
-  posts: null,
+  userData: {
+    id: null,
+    name: null
+  }
 };
 
 const getters = {
@@ -42,9 +44,13 @@ const actions = {
 };
 
 const mutations = {
-  setUser(state, username) {
-    state.user = username;
+  setUserData(state, userData) {
+    state.userData = userData;
   },
+
+//  setUser(state, username) {
+//    state.user = username;
+//  },
 
   setPosts(state, posts) {
     state.posts = posts;

@@ -30,7 +30,8 @@ const routes = [
     path: "/posts",
     name: "Posts",
     component: Posts,
-    meta: { requiresAuth: true },
+    // meta: { requiresAuth: true },
+    meta: { guest: true },
   },
 ];
 
